@@ -37,14 +37,14 @@
                             <tr>
                                 <th>#</th>
                                 <th>Name</th>
-
+                                <th>Image</th>
                                 <th>Action</th>
                             </tr>
                             @foreach($categories as $category)
                                 <tr>
                                     <td>{{$category->id}}</td>
                                     <td>{{$category->name}}</td>
-
+                                    <td><img src="{{$category->image}}" alt=""></td>
 
                                     <td>
                                         <a href="{{route('admin.category.edit',$category->id)}}"

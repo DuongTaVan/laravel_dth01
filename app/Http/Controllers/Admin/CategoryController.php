@@ -22,9 +22,18 @@ class CategoryController extends Controller
 
     public function store(CategoryRequest $request)
     {
-
-        $data['name'] = $request->name;
+        $data = $request->all();
+        //dd($data);
+        if($request->hasfile('image'))
+        {
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension(); // getting image extension
+            $filename =time().'.'.$extension;
+            $file->move('uploads/categories/', $filename);
+            $data['image'] = 'uploads/categories/' . $filename;
+        }
         $category = Category::create($data);
+
         return redirect()->route('admin.category.index')->with('message', 'add-success !');
     }
 
@@ -36,8 +45,20 @@ class CategoryController extends Controller
 
     public function update(CategoryRequest $request, $id)
     {
-        $data['name'] = $request->name;
+        $data = $request->all();
         $category = Category::findOrFail($id);
+        if($request->hasfile('image'))
+        {
+            if ($category->image) {
+                $old_image = $category->image;
+                unlink($old_image);
+            }
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension(); // getting image extension
+            $filename =time().'.'.$extension;
+            $file->move('uploads/categories/', $filename);
+            $data['image'] = 'uploads/categories/' . $filename;
+        }
         $category->update($data);
         return redirect()->route('admin.category.index')->with('message', 'edit-success !');;
     }
